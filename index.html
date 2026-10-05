@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#c8f19a" />
+  <title>AVODO — CREATE CREATIVITY.</title>
+  <style>
+    :root{
+      --lime:#c8f19a;
+      --lime2:#a8df73;
+      --lime3:#e8f8d8;
+      --green:#4f8a48;
+      --deep:#173727;
+      --ink:#12271a;
+      --muted:#64736a;
+      --bg:#f8fbf5;
+      --white:#fff;
+      --line:rgba(23,55,39,.13);
+      --nav-dark:#173727;
+      --shadow:0 18px 55px rgba(23,55,39,.11);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--ink);
+      font-family:Inter,Pretendard,"Noto Sans KR",Arial,sans-serif;
+      overflow-x:hidden;
+    }
+    body.locked{overflow:hidden}
+    a{color:inherit;text-decoration:none}
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+
+    /* ---------------- HEADER ---------------- */
+    .header{
+      position:fixed;z-index:200;top:18px;left:50%;transform:translateX(-50%);
+      width:min(1380px,calc(100% - 36px));height:64px;padding:0 10px 0 20px;
+      border:1px solid rgba(255,255,255,.72);border-radius:20px;
+      background:rgba(255,255,255,.48);backdrop-filter:blur(24px) saturate(150%);
+      -webkit-backdrop-filter:blur(24px) saturate(150%);
+      box-shadow:0 10px 35px rgba(23,55,39,.10),inset 0 1px 0 rgba(255,255,255,.85);
+      display:flex;align-items:center;justify-content:space-between;transition:.25s ease;
+    }
+    .header.shrink{height:58px;border-radius:18px;background:rgba(255,255,255,.62)}
+
+    .brand{
+      display:flex;align-items:center;gap:10px;
+      font-weight:900;letter-spacing:-.06em;
+      font-size:25px;
+      flex:none;
+    }
+    .mark{width:40px;height:40px;display:block}
+    .brand small{
+      margin-left:2px;
+      font-size:9px;
+      font-weight:700;
+      letter-spacing:.18em;
+      color:var(--green);
+      text-transform:uppercase;
+      align-self:flex-end;
+      margin-bottom:6px;
+    }
+
+    .desktop-actions{
+      display:flex;align-items:center;gap:22px;
+      font-size:12px;font-weight:700;
+    }
+    .lang{letter-spacing:.12em;color:#758179}
+    .lang .on{color:var(--green)}
+
+    .menu-btn{
+      position:relative;z-index:10000;isolation:isolate;
+      width:48px;height:48px;border:1px solid rgba(23,55,39,.10);background:rgba(255,255,255,.55);
+      display:grid;place-items:center;border-radius:15px;cursor:pointer;touch-action:manipulation;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .menu-btn:hover{background:var(--lime3)}
+    .menu-icon{width:24px;height:18px;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none}
+    .menu-icon span{display:block;height:2px;width:100%;background:var(--deep);border-radius:2px;transition:.25s}
+
+
+    /* v0.4.1 fixes: visible header brand + robust language controls */
+    .brand{color:var(--deep);min-width:150px;visibility:visible;opacity:1}
+    .brand .mark{width:40px;height:34px;display:block;flex:none;color:var(--deep)}
+    .brand > span{display:inline-block;font-size:25px;font-weight:900;letter-spacing:-.065em;color:var(--deep)}
+    .lang-switch{display:flex;align-items:center;gap:7px}
+    .lang-btn{appearance:none;-webkit-appearance:none;border:1px solid rgba(23,55,39,.13);background:rgba(255,255,255,.52);color:#65736b;border-radius:999px;padding:6px 11px;font-size:11px;font-weight:900;letter-spacing:.04em;line-height:1;cursor:pointer;transition:.2s;touch-action:manipulation}
+    .lang-btn:hover{background:rgba(255,255,255,.85);color:var(--deep)}
+    .lang-btn.active{background:var(--deep);color:#fff;border-color:var(--deep);box-shadow:0 4px 14px rgba(23,55,39,.12)}
+    .desktop-actions{display:flex;align-items:center;gap:18px}
+    .menu-mini-mark{display:none!important}
+    .header .menu-btn{flex:none}
+    .header .menu-btn .menu-icon{pointer-events:none}
+    .detail .info-card p,.detail .info-card li,.detail .timeline-item div,.detail .detail-lead{word-break:keep-all}
+    .business-detail{grid-template-columns:repeat(3,1fr)}
+    .biz{min-height:285px}
+    .biz .role{margin-top:10px;color:var(--green);font-size:10px;font-weight:800;letter-spacing:.1em}
+    .biz .capabilities{margin:12px 0 0;padding-left:16px;color:#75837a;font-size:11px;line-height:1.7}
+    .service .service-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .service .service-meta span{font-size:9px;border:1px solid rgba(79,138,72,.18);border-radius:999px;padding:5px 8px;color:#6c7b72;background:#f7fbf2}
+    .coming-soon{min-height:320px;display:grid;place-items:center;text-align:center;border-radius:30px;background:linear-gradient(145deg,#edf8e2,#fff);border:1px solid var(--line)}
+    .coming-soon .cs-kicker{font-size:10px;letter-spacing:.2em;color:var(--green);font-weight:900}
+    .coming-soon h3{margin:12px 0 8px;font-size:clamp(38px,6vw,72px);letter-spacing:-.07em}
+    .coming-soon p{margin:0;color:#708077;line-height:1.7;font-size:13px}
+    .apply-departments{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:22px}
+    .apply-dept{padding:14px 15px;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.05);border-radius:15px}
+    .apply-dept strong{display:block;font-size:12px}
+    .apply-dept span{display:block;margin-top:5px;color:rgba(255,255,255,.55);font-size:10px;line-height:1.5}
+    @media(max-width:1050px){.business-detail{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:760px){.brand{min-width:0}.brand > span{font-size:21px}.brand .mark{width:35px;height:30px}.lang-btn{padding:5px 9px;font-size:10px}.desktop-actions{gap:8px}.business-detail{grid-template-columns:1fr}.apply-departments{grid-template-columns:1fr}}
+
+    /* ---------------- HOME ---------------- */
+    main{position:relative}
+    .hero{
+      min-height:92vh;
+      padding:150px 7vw 80px;
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      align-items:center;
+      gap:30px;
+      position:relative;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 85% 28%,rgba(200,241,154,.84),transparent 33%),
+        linear-gradient(135deg,#fbfdf9 0%,#eef9df 100%);
+    }
+    .hero:before{
+      content:"";
+      position:absolute;
+      width:700px;height:700px;
+      border-radius:50%;
+      right:-300px;top:-330px;
+      border:1px solid rgba(79,138,72,.15);
+      box-shadow:0 0 0 70px rgba(79,138,72,.035),0 0 0 140px rgba(79,138,72,.025);
+    }
+    .hero-content{position:relative;z-index:2;max-width:760px}
+    .hero-top-mark{
+      width:76px;height:76px;margin-bottom:24px;
+      display:grid;place-items:center;
+      border-radius:24px;
+      background:rgba(255,255,255,.72);
+      border:1px solid rgba(23,55,39,.08);
+      box-shadow:0 12px 30px rgba(23,55,39,.08);
+    }
+    .hero-top-mark svg{width:55px;height:55px;display:block}
+    .eyebrow{
+      color:var(--green);font-size:12px;font-weight:800;
+      letter-spacing:.22em;
+      display:flex;align-items:center;gap:10px;
+      margin-bottom:25px;
+    }
+    .eyebrow:before{content:"";width:28px;height:1px;background:var(--green)}
+    h1{
+      margin:0;
+      font-size:clamp(72px,10vw,154px);
+      line-height:.82;
+      letter-spacing:-.085em;
+      font-weight:900;
+    }
+    h1 span{display:block;color:var(--green)}
+    .hero-one-line{
+      margin:34px 0 0;
+      font-size:clamp(18px,2vw,25px);
+      line-height:1.5;
+      letter-spacing:-.03em;
+      max-width:650px;
+      word-break:keep-all;
+    }
+    .hero-note{
+      margin:18px 0 0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.8;
+      max-width:580px;
+      word-break:keep-all;
+    }
+
+    .hero-art{
+      position:relative;
+      min-height:480px;
+      display:grid;place-items:center;
+    }
+    .hero-glow{
+      position:absolute;width:350px;height:350px;border-radius:50%;
+      background:rgba(200,241,154,.72);
+      filter:blur(4px);
+    }
+    .hero-symbol{
+      position:relative;z-index:2;width:min(600px,98%);
+      filter:drop-shadow(0 28px 32px rgba(23,55,39,.13));
+      animation:float 6s ease-in-out infinite;
+    }
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-11px)}}
+    .particle{position:absolute;border-radius:50%;background:var(--green);opacity:.72}
+    .pa{width:13px;height:13px;top:13%;right:10%}
+    .pb{width:23px;height:23px;bottom:16%;right:16%;background:#9bd66e}
+    .pc{width:9px;height:9px;bottom:22%;left:12%;background:#b9e88c}
+    .pd{width:16px;height:16px;top:26%;left:9%;background:#72ae5f}
+
+    /* HOME: minimal content only */
+    .home-strip{padding:75px 7vw 60px;background:#fff}
+    .strip-head{
+      display:flex;justify-content:space-between;align-items:end;
+      margin-bottom:30px;gap:24px
+    }
+    .label{
+      color:var(--green);font-size:11px;font-weight:800;letter-spacing:.22em;
+      margin-bottom:12px;
+    }
+    .strip-title{
+      margin:0;font-size:clamp(35px,5vw,62px);
+      line-height:.98;letter-spacing:-.065em;
+    }
+    .more{
+      font-size:12px;font-weight:800;letter-spacing:.03em;
+      white-space:nowrap;
+    }
+
+    .brand-preview{
+      display:grid;grid-template-columns:1.25fr .75fr;gap:18px;
+    }
+    .brand-feature{
+      min-height:360px;padding:34px;border-radius:32px;
+      background:linear-gradient(140deg,#eaf8d7,#d0f1ae);
+      display:flex;flex-direction:column;justify-content:flex-end;
+      overflow:hidden;position:relative;
+    }
+    .brand-feature:before{
+      content:"AVODO";
+      position:absolute;right:-10px;top:10px;
+      font-size:120px;font-weight:900;letter-spacing:-.09em;
+      color:rgba(79,138,72,.12);
+    }
+    .brand-feature h3{
+      margin:0;font-size:48px;letter-spacing:-.06em;
+      position:relative;z-index:1
+    }
+    .brand-feature p{
+      margin:12px 0 0;color:#53685b;line-height:1.75;
+      max-width:520px;word-break:keep-all;position:relative;z-index:1
+    }
+    .brand-list{display:grid;gap:18px}
+    .brand-card{
+      padding:24px 25px;border:1px solid var(--line);border-radius:25px;
+      background:#fff;display:flex;align-items:center;justify-content:space-between;
+      min-height:109px;transition:.25s
+    }
+    .brand-card:hover{transform:translateX(5px);border-color:#a7d783}
+    .brand-card strong{font-size:17px;letter-spacing:-.035em}
+    .brand-card span{display:block;color:#79877f;font-size:12px;margin-top:7px;line-height:1.5}
+    .brand-arrow{font-size:20px}
+
+    .news-preview{padding:70px 7vw 105px;background:var(--bg)}
+    .news-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+    .news-main{
+      min-height:390px;padding:34px;border-radius:32px;
+      background:
+        radial-gradient(circle at 78% 20%,rgba(200,241,154,.95),transparent 30%),
+        linear-gradient(135deg,#f2f9e9,#e5f3dc);
+      display:flex;flex-direction:column;justify-content:flex-end;
+      border:1px solid rgba(79,138,72,.10)
+    }
+    .news-tag{color:var(--green);font-size:11px;letter-spacing:.18em;font-weight:800}
+    .news-main h3{
+      margin:13px 0 0;font-size:clamp(34px,4.4vw,64px);
+      line-height:.96;letter-spacing:-.07em
+    }
+    .news-main small{margin-top:18px;color:#7a887f}
+    .news-list{display:grid;gap:12px}
+    .news-item{
+      padding:25px 26px;border:1px solid var(--line);border-radius:23px;
+      background:#fff;display:flex;justify-content:space-between;gap:20px;
+      align-items:center;transition:.25s
+    }
+    .news-item:hover{transform:translateX(5px);border-color:#a7d783}
+    .news-item h4{margin:0;font-size:16px;letter-spacing:-.035em}
+    .news-item p{margin:7px 0 0;color:#7a877f;font-size:11px}
+
+    /* CSS-first menu trigger: works even if the browser delays JavaScript */
+    #menuToggle{position:absolute;opacity:0;pointer-events:none}
+    #menuToggle:checked ~ .overlay{transform:translateY(0);opacity:1;visibility:visible;pointer-events:auto}
+    #menuToggle:checked ~ .overlay .menu-x{transform:rotate(45deg)}
+
+    /* ---------------- MEGA MENU ---------------- */
+    .overlay{
+      position:fixed;z-index:9999;inset:0;
+      background:var(--nav-dark);color:#fff;
+      transform:translateY(-102%);
+      opacity:0;visibility:hidden;pointer-events:none;
+      transition:transform .42s cubic-bezier(.8,0,.18,1),opacity .22s ease,visibility 0s linear .42s;
+      overflow:auto;
+    }
+    .overlay.open{transform:translateY(0);opacity:1;visibility:visible;pointer-events:auto;transition:transform .52s cubic-bezier(.8,0,.18,1),opacity .2s ease;}
+    .overlay-inner{min-height:100%;padding:32px 4.5vw 80px}
+    .overlay-top{
+      display:flex;align-items:center;justify-content:space-between;
+      margin-bottom:48px
+    }
+    .overlay-logo{display:flex;align-items:center;gap:12px;font-size:25px;font-weight:900;letter-spacing:-.05em}
+    .overlay-logo .mark{color:#fff}
+    .close{
+      border:0;background:transparent;color:#fff;width:50px;height:50px;
+      position:relative
+    }
+    .close span{position:absolute;left:12px;top:24px;width:27px;height:1.6px;background:#fff}
+    .close span:first-child{transform:rotate(45deg)}
+    .close span:last-child{transform:rotate(-45deg)}
+
+    .menu-grid{
+      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+      column-gap:9vw;row-gap:72px
+    }
+    .menu-group h2{
+      margin:0 0 20px;
+      font-size:34px;letter-spacing:-.05em;
+      color:#fff
+    }
+    .menu-group h2 .tiny{
+      font-size:10px;letter-spacing:.18em;color:var(--lime2);
+      display:block;margin-bottom:8px
+    }
+    .menu-links{display:grid;gap:10px}
+    .menu-links a,
+    .menu-links button{
+      width:max-content;border:0;background:transparent;color:rgba(255,255,255,.64);
+      padding:0;font-size:15px;text-align:left;letter-spacing:-.02em;
+      transition:.2s
+    }
+    .menu-links a:hover,
+    .menu-links button:hover{color:#fff;transform:translateX(4px)}
+    .menu-emphasis{color:var(--lime2)!important}
+
+    /* ---------------- DETAIL DRAWER / PAGES ---------------- */
+    .detail{
+      position:fixed;z-index:280;inset:0;
+      background:var(--bg);overflow:auto;
+      transform:translateX(100%);
+      transition:transform .48s cubic-bezier(.77,0,.18,1)
+    }
+    .detail.open{transform:translateX(0)}
+    .detail-head{
+      position:sticky;top:0;z-index:2;
+      height:76px;padding:0 5vw;
+      display:flex;align-items:center;justify-content:space-between;
+      background:rgba(248,251,245,.9);backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--line)
+    }
+    .detail-head strong{font-size:15px;letter-spacing:.06em}
+    .back{
+      border:1px solid var(--line);background:#fff;border-radius:999px;
+      padding:10px 16px;font-size:12px;font-weight:800
+    }
+    .detail-body{padding:80px 7vw 110px;max-width:1400px;margin:auto}
+    .detail-kicker{font-size:11px;letter-spacing:.2em;color:var(--green);font-weight:800}
+    .detail-title{
+      margin:14px 0 0;font-size:clamp(46px,7vw,96px);
+      line-height:.9;letter-spacing:-.08em
+    }
+    .detail-lead{
+      max-width:800px;margin:28px 0 0;
+      font-size:18px;line-height:1.8;color:#52645a;word-break:keep-all
+    }
+
+    .info-grid{
+      margin-top:55px;
+      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px
+    }
+    .info-card{
+      background:#fff;border:1px solid var(--line);border-radius:26px;
+      padding:28px
+    }
+    .info-card h3{margin:0;font-size:21px;letter-spacing:-.045em}
+    .info-card p,.info-card li{
+      color:#617067;line-height:1.75;font-size:14px
+    }
+    .info-card ul{margin:15px 0 0;padding-left:18px}
+    .timeline{margin-top:55px;border-top:1px solid var(--line)}
+    .timeline-item{
+      display:grid;grid-template-columns:160px 1fr;gap:30px;
+      padding:28px 0;border-bottom:1px solid var(--line)
+    }
+    .timeline-item strong{font-size:18px;color:var(--green)}
+    .timeline-item div{line-height:1.8;color:#52645a;word-break:keep-all}
+
+    .business-detail{
+      display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:50px
+    }
+    .biz{
+      min-height:240px;border-radius:25px;background:#fff;border:1px solid var(--line);
+      padding:23px;display:flex;flex-direction:column;justify-content:space-between
+    }
+    .biz .n{font-size:10px;color:#7b8a80;letter-spacing:.15em}
+    .biz .icon{
+      width:50px;height:50px;border-radius:16px;background:var(--lime3);
+      display:grid;place-items:center;color:var(--green);font-weight:900
+    }
+    .biz h3{margin:18px 0 6px;font-size:16px}
+    .biz p{margin:0;color:#75837a;font-size:11px;line-height:1.6}
+
+    .services-grid{
+      margin-top:50px;
+      display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px
+    }
+    .service{
+      border:1px solid var(--line);background:#fff;border-radius:25px;
+      padding:25px;min-height:190px;display:flex;flex-direction:column;justify-content:space-between;
+      transition:.25s
+    }
+    .service:hover{transform:translateY(-5px);border-color:#a7d783;box-shadow:var(--shadow)}
+    .service .tag{color:var(--green);font-size:10px;letter-spacing:.16em;font-weight:800}
+    .service h3{margin:13px 0 7px;font-size:19px;letter-spacing:-.04em}
+    .service p{margin:0;color:#6e7c74;font-size:12px;line-height:1.65;word-break:keep-all}
+    .service .open-link{margin-top:18px;font-size:12px;font-weight:800;color:var(--green)}
+
+    .identity{
+      margin-top:50px;display:grid;grid-template-columns:.85fr 1.15fr;gap:18px
+    }
+    .identity-logo{
+      min-height:390px;border-radius:32px;background:linear-gradient(145deg,#e7f8d6,#c7ee9d);
+      display:grid;place-items:center
+    }
+    .identity-copy{
+      border:1px solid var(--line);background:#fff;border-radius:32px;padding:36px
+    }
+    .identity-copy h3{margin:0 0 15px;font-size:32px;letter-spacing:-.05em}
+    .identity-copy p{color:#5f6e66;line-height:1.85;word-break:keep-all}
+    .identity-points{margin-top:25px;display:grid;gap:14px}
+    .identity-point{
+      padding:17px 0;border-top:1px solid var(--line)
+    }
+    .identity-point strong{display:block;font-size:14px}
+    .identity-point span{display:block;margin-top:5px;color:#718077;font-size:12px;line-height:1.6}
+
+    .esg-grid{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:50px
+    }
+    .esg{
+      border-radius:28px;background:#fff;border:1px solid var(--line);padding:30px;min-height:250px
+    }
+    .esg .esg-num{color:var(--green);font-size:11px;font-weight:800;letter-spacing:.15em}
+    .esg h3{font-size:26px;margin:15px 0 10px;letter-spacing:-.05em}
+    .esg p{color:#68776e;font-size:13px;line-height:1.8;word-break:keep-all}
+
+    .apply-box,.contact-box{
+      margin-top:50px;border-radius:30px;background:var(--deep);color:#fff;padding:34px
+    }
+    .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:24px}
+    .field{display:grid;gap:8px}
+    .field label{font-size:11px;color:rgba(255,255,255,.65);letter-spacing:.12em}
+    .field input,.field textarea,.field select{
+      width:100%;border:1px solid rgba(255,255,255,.15);
+      background:rgba(255,255,255,.06);color:#fff;
+      border-radius:14px;padding:13px 14px;outline:none
+    }
+    .field textarea{min-height:145px;resize:vertical}
+    .field input::placeholder,.field textarea::placeholder{color:rgba(255,255,255,.35)}
+    .full{grid-column:1/-1}
+    .submit{
+      margin-top:18px;border:0;background:var(--lime);color:var(--deep);
+      border-radius:999px;padding:14px 20px;font-weight:900;font-size:12px
+    }
+
+    /* ---------------- FOOTER ---------------- */
+    footer{
+      background:#11271b;color:#fff;padding:48px 7vw 28px
+    }
+    .footer-main{
+      display:flex;justify-content:space-between;gap:30px;padding-bottom:55px
+    }
+    .footer-brand{font-weight:900;font-size:29px;letter-spacing:-.06em;display:flex;align-items:center;gap:10px}
+    .footer-brand .mark{color:#fff}
+    .footer-links{display:flex;gap:55px}
+    .footer-links div{display:grid;gap:10px}
+    .footer-links strong{font-size:10px;letter-spacing:.16em;color:var(--lime)}
+    .footer-links a,.footer-links button{
+      border:0;background:transparent;padding:0;color:rgba(255,255,255,.62);
+      font-size:12px;text-align:left
+    }
+    .footer-bottom{
+      border-top:1px solid rgba(255,255,255,.12);
+      padding-top:20px;display:flex;justify-content:space-between;gap:15px;
+      color:rgba(255,255,255,.43);font-size:10px
+    }
+
+    /* ---------------- ROUTED PAGE TRANSITION ---------------- */
+    .detail.open{animation:routeIn .38s cubic-bezier(.2,.8,.2,1) both}
+    @keyframes routeIn{from{opacity:.45;transform:translateX(5%)}to{opacity:1;transform:translateX(0)}}
+
+
+    /* ---------------- GOOGLE SHEETS NEWSROOM ---------------- */
+    .news-feed-wrap{margin-top:46px}
+    .news-feed-status{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px}
+    .news-feed-status p{margin:0;color:#75837a;font-size:12px;line-height:1.6}
+    .news-refresh{border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 15px;font-size:11px;font-weight:900;white-space:nowrap}
+    .news-refresh:hover{border-color:#9acb79;background:var(--lime3)}
+    .news-feed{display:grid;gap:12px}
+    .news-feed-card{display:grid;grid-template-columns:120px 1fr auto;gap:22px;align-items:center;padding:24px 26px;border:1px solid var(--line);border-radius:24px;background:#fff;transition:.2s}
+    .news-feed-card:hover{transform:translateY(-2px);border-color:#a7d783;box-shadow:var(--shadow)}
+    .news-feed-date{font-size:11px;color:var(--green);font-weight:900;letter-spacing:.08em}
+    .news-feed-category{font-size:9px;color:#87938c;letter-spacing:.14em;margin-top:7px}
+    .news-feed-title{margin:0;font-size:19px;letter-spacing:-.04em}
+    .news-feed-summary{margin:7px 0 0;color:#6d7b73;font-size:12px;line-height:1.7;word-break:keep-all}
+    .news-feed-link{border:1px solid var(--line);border-radius:999px;padding:10px 14px;font-size:10px;font-weight:900;white-space:nowrap}
+    .news-empty{padding:52px 28px;border:1px dashed rgba(23,55,39,.16);border-radius:28px;background:rgba(255,255,255,.52);text-align:center}
+    .news-empty h3{margin:0;font-size:28px;letter-spacing:-.05em}
+    .news-empty p{margin:10px auto 0;max-width:620px;color:#75837a;font-size:13px;line-height:1.8}
+    @media(max-width:760px){.news-feed-status{align-items:flex-start;flex-direction:column}.news-feed-card{grid-template-columns:1fr;gap:10px}.news-feed-link{width:max-content}.news-feed-date{font-size:10px}}
+
+    /* ---------------- RESPONSIVE ---------------- */
+    @media(max-width:1050px){
+      .hero{grid-template-columns:1fr}
+      .hero-art{min-height:400px}
+      .brand-preview,.news-grid{grid-template-columns:1fr}
+      .business-detail{grid-template-columns:repeat(3,1fr)}
+      .services-grid{grid-template-columns:repeat(2,1fr)}
+      .identity{grid-template-columns:1fr}
+      .esg-grid{grid-template-columns:1fr}
+    }
+    @media(max-width:760px){
+      .header{width:calc(100% - 20px);top:10px;height:58px;padding:0 8px 0 15px;border-radius:17px}
+      .header.shrink{height:54px}
+      .brand{font-size:21px}.brand .mark{width:35px;height:35px}.brand small{display:none}
+      .desktop-actions{gap:8px}.lang{font-size:10px}
+      .hero{padding:125px 22px 55px;min-height:auto}
+      h1{font-size:clamp(67px,17vw,104px)}
+      .hero-art{min-height:350px}
+      .hero-top-mark{width:64px;height:64px;border-radius:20px;margin-bottom:20px}
+      .hero-top-mark svg{width:47px;height:47px}
+      .hero-glow{width:260px;height:260px}
+      .hero-symbol{width:106%}
+      .home-strip,.news-preview{padding-left:22px;padding-right:22px}
+      .brand-feature{min-height:310px}
+      .brand-feature h3{font-size:39px}
+      .menu-grid{grid-template-columns:1fr;row-gap:45px}
+      .overlay-inner{padding:26px 24px 70px}
+      .overlay-top{margin-bottom:30px}
+      .menu-group h2{font-size:28px}
+      .detail-head{padding:0 20px}
+      .detail-body{padding:62px 22px 85px}
+      .detail-title{font-size:58px}
+      .info-grid,.services-grid{grid-template-columns:1fr}
+      .business-detail{grid-template-columns:1fr 1fr}
+      .timeline-item{grid-template-columns:92px 1fr;gap:18px}
+      .identity-copy{padding:28px}
+      .apply-box,.contact-box{padding:24px}
+      .form-grid{grid-template-columns:1fr}
+      .full{grid-column:auto}
+      .footer-main{display:block}
+      .footer-links{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:28px}
+      .footer-bottom{display:block;line-height:1.8}
+    }
+  </style>
+</head>
+
+<body data-current-lang="ko">
+  <!-- SVG logo symbol: avocado + infinity, reduced to one dark-green form -->
+  <template id="logoTemplate">
+    <svg class="mark" viewBox="0 0 120 84" aria-hidden="true">
+      <path fill="currentColor" d="M16 44C8 28 18 11 37 10c11 0 20 6 28 17 7-11 17-17 29-17 18 0 28 17 21 34-7 16-22 27-38 27-13 0-23-7-31-18C38 64 29 70 19 65c-9-4-13-12-3-21Zm15 5c3 8 8 11 15 11 8 0 16-5 24-14l10-12c5-6 9-9 14-9 6 0 10 4 10 10 0 10-9 20-20 20-8 0-14-4-21-13L53 30C46 21 40 18 34 18c-11 0-17 10-12 20 2 4 5 8 9 11Z"/>
+      <circle cx="34" cy="32" r="6.5" fill="var(--logo-bg,#fff)"/>
+    </svg>
+  </template>
+
+  <!-- HEADER -->
+  <header class="header" id="header">
+    <a class="brand" href="#top" aria-label="Avodo home" id="brandSlot">
+      <svg class="mark" viewBox="0 0 120 84" aria-hidden="true"><path fill="currentColor" d="M16 44C8 28 18 11 37 10c11 0 20 6 28 17 7-11 17-17 29-17 18 0 28 17 21 34-7 16-22 27-38 27-13 0-23-7-31-18C38 64 29 70 19 65c-9-4-13-12-3-21Zm15 5c3 8 8 11 15 11 8 0 16-5 24-14l10-12c5-6 9-9 14-9 6 0 10 4 10 10 0 10-9 20-20 20-8 0-14-4-21-13L53 30C46 21 40 18 34 18c-11 0-17 10-12 20 2 4 5 8 9 11Z"/><circle cx="34" cy="32" r="6.5" fill="#fff"/></svg>
+      <span>Avodo</span>
+    </a>
+    <div class="desktop-actions">
+      <div class="lang-switch" aria-label="Language selector">
+        <button type="button" class="lang-btn active" data-lang="ko">KO</button>
+        <span>|</span>
+        <button type="button" class="lang-btn" data-lang="en">EN</button>
+      </div>
+      <label for="menuToggle" class="menu-btn" aria-label="전체 메뉴 열기" role="button" tabindex="0">
+        <span class="menu-icon"><span></span><span></span><span></span></span>
+      </label>
+    </div>
+  </header>
+  <input type="checkbox" id="menuToggle" aria-hidden="true">
+
+  <!-- HOME -->
+  <main id="top">
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-top-mark" aria-label="Avodo mark">
+          <svg viewBox="0 0 120 84" aria-hidden="true">
+            <path fill="#173727" d="M16 44C8 28 18 11 37 10c11 0 20 6 28 17 7-11 17-17 29-17 18 0 28 17 21 34-7 16-22 27-38 27-13 0-23-7-31-18C38 64 29 70 19 65c-9-4-13-12-3-21Zm15 5c3 8 8 11 15 11 8 0 16-5 24-14l10-12c5-6 9-9 14-9 6 0 10 4 10 10 0 10-9 20-20 20-8 0-14-4-21-13L53 30C46 21 40 18 34 18c-11 0-17 10-12 20 2 4 5 8 9 11Z"/>
+            <circle cx="34" cy="32" r="6.5" fill="#fff"/>
+          </svg>
+        </div>
+        <div class="eyebrow">AVODO AI COMPANY</div>
+        <h1>CREATE<span>CREATIVITY.</span></h1>
+
+        <p class="hero-one-line">
+          기술과 창의성을 연결해 새로운 가능성을 만들어가는 기업.
+        </p>
+        <p class="hero-note">
+          Avodo는 인공지능 기반 소프트웨어 서비스, 엔터테인먼트, 게임,
+          자동차, 교육 소프트웨어 등 다양한 분야에서 새로운 경험을 만듭니다.
+        </p>
+      </div>
+
+      <div class="hero-art">
+        <div class="hero-glow"></div>
+        <i class="particle pa"></i><i class="particle pb"></i>
+        <i class="particle pc"></i><i class="particle pd"></i>
+
+        <!-- simplified one-color avocado/infinity mark -->
+        <svg class="hero-symbol" viewBox="0 0 760 500" role="img" aria-label="Avodo logo">
+          <path fill="#173727" d="M120 267C71 177 126 86 226 91c57 3 97 36 137 92 40-56 83-92 141-92 99 0 151 91 102 181-39 72-117 101-177 64-27-17-47-43-66-69-19 26-39 52-66 69-60 37-139 8-177-69Zm38-17c-30-55 0-112 67-112 45 0 82 35 138 113 57-78 95-113 140-113 66 0 97 57 67 112-24 45-81 55-119 27-27-20-51-52-88-101-36 49-60 81-87 101-38 28-95 18-118-27Z"/>
+          <circle cx="229" cy="227" r="52" fill="#173727"/>
+          <circle cx="229" cy="227" r="26" fill="#eaf8d7"/>
+          <path d="M94 287C180 349 291 342 363 244c72-98 186-113 314-25" fill="none" stroke="#173727" stroke-width="14" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Small brand intro -->
+    <section class="home-strip">
+      <div class="strip-head">
+        <div>
+          <div class="label">AVODO ECOSYSTEM</div>
+          <h2 class="strip-title">우리가 만드는<br>서비스와 브랜드</h2>
+        </div>
+        <button class="more" data-detail="services">VIEW ALL →</button>
+      </div>
+
+      <div class="brand-preview">
+        <a class="brand-feature" href="https://smilemingi.github.io/avodotour/" target="_blank" rel="noopener">
+          <div class="label">NEW · AVODO WORLD TOURISM</div>
+          <h3>Explore the world.</h3>
+          <p>
+            나라별 여행 정보와 탐색 기능, AI 가이드를 연결한 Avodo의 새로운
+            디지털 서비스입니다.
+          </p>
+        </a>
+
+        <div class="brand-list">
+          <button class="brand-card" data-detail="services">
+            <div><strong>AI & SOFTWARE</strong><span>AI 서비스 · 웹 소프트웨어 · OS</span></div>
+            <span class="brand-arrow">↗</span>
+          </button>
+          <button class="brand-card" data-detail="business">
+            <div><strong>ENTERTAINMENT</strong><span>음악 · 콘텐츠 · 아티스트 IP</span></div>
+            <span class="brand-arrow">↗</span>
+          </button>
+          <button class="brand-card" data-detail="services">
+            <div><strong>EDUCATION & GAMES</strong><span>교육 소프트웨어 · 인터랙티브 게임</span></div>
+            <span class="brand-arrow">↗</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- News only -->
+    <section class="news-preview">
+      <div class="strip-head">
+        <div>
+          <div class="label">NEWSROOM</div>
+          <h2 class="strip-title">Avodo의 새로운 소식</h2>
+        </div>
+        <button class="more" data-detail="news">ALL NEWS →</button>
+      </div>
+
+      <div class="news-grid">
+        <article class="news-main">
+          <div class="news-tag">AVODO COMPANY</div>
+          <h3>CREATE CREATIVITY.<br>새로운 가능성을 만듭니다.</h3>
+          <small>2026.10 · AVODO</small>
+        </article>
+        <div class="news-list">
+          <article class="news-item">
+            <div><h4>Avodo World Tourism 서비스 시작</h4><p>BUSINESS · TOURISM</p></div><strong>→</strong>
+          </article>
+          <article class="news-item">
+            <div><h4>Avodo AI 소프트웨어 프로젝트 확장</h4><p>TECHNOLOGY</p></div><strong>→</strong>
+          </article>
+          <article class="news-item">
+            <div><h4>Avodo Education · K-Master 학습 플랫폼 개발</h4><p>EDUCATION</p></div><strong>→</strong>
+          </article>
+          <article class="news-item">
+            <div><h4>Avodo Games 인터랙티브 프로젝트 업데이트</h4><p>GAMING</p></div><strong>→</strong>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-main">
+      <div class="footer-brand" id="footerBrand"></div>
+      <div class="footer-links">
+        <div>
+          <strong>COMPANY</strong>
+          <button data-detail="company">회사소개</button>
+          <button data-detail="history">History</button>
+          <button data-detail="branding">Brand Identity</button>
+          <button data-detail="esg">ESG</button>
+        </div>
+        <div>
+          <strong>CONNECT</strong>
+          <button data-detail="careers">Careers</button>
+          <button data-detail="contact">Contact Us</button>
+          <a href="https://linktr.ee/supermingi" target="_blank" rel="noopener">Service Hub ↗</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 AVODO AI COMPANY. ALL RIGHTS RESERVED.</span>
+      <span>PRIVACY POLICY · TERMS OF USE</span>
+    </div>
+  </footer>
+
+  <!-- MEGA MENU -->
+  <aside class="overlay" id="megaMenu" aria-hidden="true">
+    <div class="overlay-inner">
+      <div class="overlay-top">
+        <div class="overlay-logo" id="overlayLogo"></div>
+        <label for="menuToggle" class="close" id="closeMenu" aria-label="메뉴 닫기" role="button" tabindex="0"><span></span><span></span></label>
+      </div>
+
+      <div class="menu-grid">
+        <div class="menu-group">
+          <h2><span class="tiny">COMPANY</span>COMPANY</h2>
+          <div class="menu-links">
+            <button data-detail="company">Introduction</button>
+            <button data-detail="history">History</button>
+            <button data-detail="branding">Brand Identity</button>
+            <button data-detail="mission">Mission & Vision</button>
+            <button data-detail="esg">ESG</button>
+          </div>
+        </div>
+
+        <div class="menu-group">
+          <h2><span class="tiny">BUSINESS</span>BUSINESS</h2>
+          <div class="menu-links">
+            <button data-detail="business">AI & Software</button>
+            <button data-detail="business">Entertainment</button>
+            <button data-detail="business">Gaming</button>
+            <button data-detail="business">Automotive</button>
+            <button data-detail="business">Education</button>
+            <button data-detail="business">Travel & Tourism</button>
+          </div>
+        </div>
+
+        <div class="menu-group">
+          <h2><span class="tiny">SERVICES</span>BRANDS & SERVICES</h2>
+          <div class="menu-links">
+            <button data-detail="services">All Services</button>
+            <a class="menu-emphasis" href="https://smilemingi.github.io/avodotour/" target="_blank" rel="noopener">Avodo World Tourism ↗</a>
+            <a href="https://smilemingi.github.io/Avodotamagotchi/" target="_blank" rel="noopener">Avodo Tamagotchi ↗</a>
+            <a href="https://smilemingi.github.io/Avodolucky/" target="_blank" rel="noopener">Avodo Fortune ↗</a>
+            <a href="https://smilemingi.github.io/AvodoCCG/" target="_blank" rel="noopener">Avodo Crocodile Game ↗</a>
+            <a href="https://smilemingi.github.io/Avodoedu1/" target="_blank" rel="noopener">Avodo Math Man ↗</a>
+            <a href="https://sites.google.com/view/avodok/1" target="_blank" rel="noopener">K-Master ↗</a>
+            <a href="https://padlet.com/mingi1017/mingi-company-dcboyjd846hlcea7" target="_blank" rel="noopener">Mingi Hub ↗</a>
+            <a href="https://linktr.ee/supermingi" target="_blank" rel="noopener">Service Hub (Linktree) ↗</a>
+          </div>
+        </div>
+
+        <div class="menu-group">
+          <h2><span class="tiny">NEWSROOM</span>NEWSROOM</h2>
+          <div class="menu-links">
+            <button data-detail="news">Coming Soon</button>
+          </div>
+        </div>
+
+        <div class="menu-group">
+          <h2><span class="tiny">PEOPLE</span>CAREERS</h2>
+          <div class="menu-links">
+            <button data-detail="careers">Open Positions</button>
+            <button data-detail="careers">Apply by Field</button>
+          </div>
+        </div>
+
+        <div class="menu-group">
+          <h2><span class="tiny">CONTACT</span>CONNECT</h2>
+          <div class="menu-links">
+            <button data-detail="contact">Contact Us</button>
+            <a href="mailto:supermingi10171@gmail.com">supermingi10171@gmail.com</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- DETAIL: COMPANY -->
+    <section class="detail" id="detail-company">
+    <div class="detail-head"><strong>COMPANY / INTRODUCTION</strong><button class="back" data-close-detail>← BACK</button></div>
+    <div class="detail-body">
+      <div class="detail-kicker">AVODO AI COMPANY</div>
+      <h2 class="detail-title">CREATE<br>CREATIVITY.</h2>
+      <p class="detail-lead" data-detail-lead>Avodo는 기술과 창의성을 연결해 아이디어를 실제 제품과 서비스로 발전시키는 크리에이티브 테크 기업입니다. AI와 소프트웨어를 중심으로 엔터테인먼트, 게임, 모빌리티, 교육 등 다양한 영역을 탐색하며 하나의 산업에 갇히지 않는 새로운 경험을 만듭니다.</p>
+      <div class="info-grid">
+        <div class="info-card"><h3>WHO WE ARE</h3><p>Avodo는 Mingi Company에서 시작된 여러 프로젝트와 사업 경험을 하나의 브랜드 아래 연결하며 성장한 기업입니다. 기술을 만드는 것뿐 아니라 사람들이 실제로 사용하는 경험까지 설계하는 것을 중요하게 생각합니다.</p></div>
+        <div class="info-card"><h3>WHAT WE DO</h3><p>AI 서비스, 웹 소프트웨어, 디지털 콘텐츠, 게임, 교육 플랫폼, 여행·관광 서비스 등 아이디어를 빠르게 프로토타입하고 실제 서비스로 발전시키는 일을 합니다.</p></div>
+        <div class="info-card"><h3>HOW WE WORK</h3><p>작게 시작하고 빠르게 실험하며, 사용자 경험을 기준으로 개선합니다. 서로 다른 분야의 아이디어를 연결해 기존에 없던 조합을 만드는 것을 Avodo의 강점으로 삼습니다.</p></div>
+        <div class="info-card"><h3>COMPANY NAME</h3><p>Avodo는 아보카도에서 출발한 이름으로, 성장과 생명력의 이미지를 담고 있습니다. 2024년부터 AI를 핵심 성장축으로 삼으며 Avodo Ai Company라는 정체성을 강화했습니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- DETAIL: MISSION -->
+    <section class="detail" id="detail-mission">
+    <div class="detail-head"><strong>COMPANY / MISSION & VISION</strong><button class="back" data-close-detail>← BACK</button></div>
+    <div class="detail-body">
+      <div class="detail-kicker">WHY AVODO</div>
+      <h2 class="detail-title">CREATE<br>WHAT'S NEXT.</h2>
+      <p class="detail-lead">기술이 목적이 아니라 새로운 가능성을 만드는 도구가 되도록, Avodo는 창의적인 아이디어와 기술을 연결합니다.</p>
+      <div class="info-grid">
+        <div class="info-card"><h3>MISSION</h3><p>아이디어를 실제 제품과 서비스로 발전시키고, 서로 다른 분야를 연결해 사용자에게 의미 있는 새로운 경험을 만듭니다.</p></div>
+        <div class="info-card"><h3>VISION</h3><p>AI와 소프트웨어를 중심으로 콘텐츠, 엔터테인먼트, 게임, 모빌리티, 교육을 연결하는 독창적인 기업 생태계를 구축합니다.</p></div>
+        <div class="info-card"><h3>CREATIVITY</h3><p>정답을 따라가기보다 새로운 조합을 찾습니다. 작은 아이디어도 직접 만들고 검증하며 발전시킵니다.</p></div>
+        <div class="info-card"><h3>RESPONSIBILITY</h3><p>사용자와 사회에 미치는 영향을 고려하고 개인정보, 안전, 신뢰성을 중요하게 생각하는 기술과 서비스를 지향합니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DETAIL: HISTORY -->
+    <section class="detail" id="detail-history">
+    <div class="detail-head"><strong>COMPANY / HISTORY</strong><button class="back" data-close-detail>← BACK</button></div>
+    <div class="detail-body">
+      <div class="detail-kicker">OUR HISTORY</div>
+      <h2 class="detail-title">A NEW START,<br>EVERY TIME.</h2>
+      <p class="detail-lead">Mingi Company에서 시작한 다양한 프로젝트와 사업을 하나의 비전 아래 연결하며 Avodo라는 새로운 기업 정체성을 만들어왔습니다.</p>
+      <div class="timeline">
+        <div class="timeline-item"><strong>2020</strong><div><b>Warmel 출발</b><br>Mingi Company의 자회사 Warmel을 중심으로 기술·서비스 분야의 초기 프로젝트를 시작했습니다.</div></div>
+        <div class="timeline-item"><strong>2020–2022</strong><div><b>다양한 사업과 프로젝트 확장</b><br>Warmel을 비롯해 Mingi Music, Mingi Car 등 여러 프로젝트가 독립적인 형태로 운영되며 콘텐츠와 기술 분야의 경험을 축적했습니다.</div></div>
+        <div class="timeline-item"><strong>2023</strong><div><b>Avodo로 브랜드 통합</b><br>기존 사업과 프로젝트를 새로운 기업 비전 아래 연결하고, Avodo라는 통합 브랜드로 다시 출발했습니다.</div></div>
+        <div class="timeline-item"><strong>2024</strong><div><b>Avodo Ai Company로 정체성 강화</b><br>AI를 미래 핵심 기술로 보고 소프트웨어와 디지털 서비스 중심의 사업 방향을 강화했습니다.</div></div>
+        <div class="timeline-item"><strong>2026</strong><div><b>크리에이티브 테크 기업으로 확장</b><br>AI·소프트웨어를 중심으로 엔터테인먼트, 게임, 자동차, 교육, 여행·관광까지 사업 영역을 넓히며 하나의 생태계를 만들어가고 있습니다.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DETAIL: BRANDING -->
+    <section class="detail" id="detail-branding">
+    <div class="detail-head"><strong>COMPANY / BRAND IDENTITY</strong><button class="back" data-close-detail>← BACK</button></div>
+    <div class="detail-body">
+      <div class="detail-kicker">THE AVODO MARK</div>
+      <h2 class="detail-title">AVOCADO<br>MEETS INFINITY.</h2>
+      <p class="detail-lead">Avodo의 심볼은 아보카도의 형태와 무한대의 흐름을 하나의 간결한 형태로 표현합니다. 하나의 아이디어가 계속 이어지고 성장한다는 브랜드 철학을 시각화했습니다.</p>
+      <div class="identity">
+        <div class="identity-logo"><svg width="320" viewBox="0 0 760 500" aria-label="Avodo logo"><path fill="#173727" d="M120 267C71 177 126 86 226 91c57 3 97 36 137 92 40-56 83-92 141-92 99 0 151 91 102 181-39 72-117 101-177 64-27-17-47-43-66-69-19 26-39 52-66 69-60 37-139 8-177-69Zm38-17c-30-55 0-112 67-112 45 0 82 35 138 113 57-78 95-113 140-113 66 0 97 57 67 112-24 45-81 55-119 27-27-20-51-52-88-101-36 49-60 81-87 101-38 28-95 18-118-27Z"/><circle cx="229" cy="227" r="52" fill="#173727"/><circle cx="229" cy="227" r="26" fill="#eaf8d7"/><path d="M94 287C180 349 291 342 363 244c72-98 186-113 314-25" fill="none" stroke="#173727" stroke-width="14" stroke-linecap="round"/></svg></div>
+        <div class="identity-copy"><h3>One mark, many possibilities.</h3><p>하나의 로고가 AI 소프트웨어부터 엔터테인먼트, 게임, 모빌리티, 교육까지 서로 다른 사업을 연결하는 공통의 시각 언어가 되도록 설계했습니다.</p><div class="identity-points"><div class="identity-point"><strong>AVOCADO</strong><span>성장, 생명력, 친근함을 상징하는 브랜드의 출발점.</span></div><div class="identity-point"><strong>INFINITY</strong><span>아이디어와 가능성이 계속 이어지는 확장성을 의미합니다.</span></div><div class="identity-point"><strong>SEED</strong><span>작은 아이디어가 실제 제품으로 자라나는 중심을 나타냅니다.</span></div><div class="identity-point"><strong>GREEN</strong><span>기술과 자연, 미래와 사람 사이의 균형을 표현하는 Avodo의 핵심 컬러입니다.</span></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DETAIL: BUSINESS -->
+    <section class="detail" id="detail-business">
+    <div class="detail-head"><strong>BUSINESS</strong><button class="back" data-close-detail>← BACK</button></div>
+    <div class="detail-body">
+      <div class="detail-kicker">OUR BUSINESS</div>
+      <h2 class="detail-title">FIVE<br>CREATIVE FIELDS.</h2>
+      <p class="detail-lead">Avodo는 여러 산업을 무작정 나누기보다 공통된 기술과 창의성을 바탕으로 서로 연결합니다. 각 사업은 독립적으로 성장하면서도 하나의 생태계 안에서 시너지를 만드는 것을 목표로 합니다.</p>
+      <div class="business-detail">
+        <div class="biz"><span class="n">01</span><div><div class="icon">AI</div><div class="role">CORE TECHNOLOGY</div><h3>AI & SOFTWARE</h3><p>AI 기반 웹 서비스, 디지털 제품, 생산성 도구와 소프트웨어 플랫폼을 개발합니다.</p><ul class="capabilities"><li>AI 서비스 & 에이전트</li><li>웹·앱 소프트웨어</li><li>디지털 제품 & OS</li></ul></div></div>
+        <div class="biz"><span class="n">02</span><div><div class="icon">♪</div><div class="role">CONTENT & IP</div><h3>ENTERTAINMENT</h3><p>음악과 영상, 아티스트, 캐릭터와 IP를 중심으로 새로운 콘텐츠 경험을 만듭니다.</p><ul class="capabilities"><li>Music & Media</li><li>Artist / IP Projects</li><li>Digital Content</li></ul></div></div>
+        <div class="biz"><span class="n">03</span><div><div class="icon">G</div><div class="role">INTERACTIVE</div><h3>GAMING</h3><p>브라우저와 디지털 환경에서 누구나 쉽게 즐길 수 있는 게임과 인터랙티브 경험을 개발합니다.</p><ul class="capabilities"><li>Browser Games</li><li>Interactive Experiences</li><li>Game Systems</li></ul></div></div>
+        <div class="biz"><span class="n">04</span><div><div class="icon">A</div><div class="role">MOBILITY</div><h3>AUTOMOTIVE</h3><p>자동차와 모빌리티를 소프트웨어 관점에서 바라보며 새로운 서비스와 사용자 경험을 탐색합니다.</p><ul class="capabilities"><li>Mobility Software</li><li>Digital UX</li><li>Future Mobility Concepts</li></ul></div></div>
+        <div class="biz"><span class="n">05</span><div><div class="icon">E</div><div class="role">LEARNING</div><h3>EDUCATION</h3><p>AI와 인터랙션을 활용해 배우는 과정 자체를 더 쉽고 재미있게 만드는 교육 서비스를 개발합니다.</p><ul class="capabilities"><li>Learning Platforms</li><li>AI Education</li><li>Digital Learning Content</li></ul></div></div>
+        <div class="biz"><span class="n">06</span><div><div class="icon">T</div><div class="role">EXPLORATION</div><h3>TRAVEL & TOURISM</h3><p>여행 정보와 탐색, AI 가이드를 연결해 새로운 방식으로 세계를 발견하도록 돕습니다.</p><ul class="capabilities"><li>Travel Platforms</li><li>AI Guide</li><li>Destination Discovery</li></ul></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DETAIL: SERVICES -->
+    <section class="detail" id="detail-services">
+    <div class="detail-head"><strong>BRANDS & SERVICES</strong><button class="back" data-close-detail>← BACK</button></div>
+    <div class="detail-body">
+      <div class="detail-kicker">AVODO ECOSYSTEM</div>
+      <h2 class="detail-title">SERVICES<br>WE CREATE.</h2>
+      <p class="detail-lead">현재 공개되어 있거나 개발된 Avodo의 디지털 서비스와 프로젝트입니다. 각 카드에서 서비스 소개를 확인하고 바로 이동할 수 있습니다.</p>
+      <div class="services-grid">
+        <a class="service" href="https://smilemingi.github.io/Avodotamagotchi/" target="_blank" rel="noopener"><div><div class="tag">AI / DIGITAL COMPANION</div><h3>Avodo Tamagotchi</h3><p>Avodo 캐릭터와 대화하고 상태를 확인하며 가볍게 상호작용할 수 있는 디지털 컴패니언 프로젝트입니다.</p><div class="service-meta"><span>AI</span><span>Interactive</span></div></div><div class="open-link">OPEN SERVICE ↗</div></a>
+        <a class="service" href="https://smilemingi.github.io/Avodolucky/" target="_blank" rel="noopener"><div><div class="tag">ENTERTAINMENT</div><h3>Avodo Fortune</h3><p>매일 가볍게 즐길 수 있도록 설계한 운세·엔터테인먼트 인터랙션 서비스입니다.</p><div class="service-meta"><span>Entertainment</span><span>Web</span></div></div><div class="open-link">OPEN SERVICE ↗</div></a>
+        <a class="service" href="https://smilemingi.github.io/AvodoCCG/" target="_blank" rel="noopener"><div><div class="tag">GAMING</div><h3>Avodo Crocodile Simulator</h3><p>브라우저에서 바로 즐기는 가벼운 인터랙티브 게임 프로젝트로, Avodo의 게임 실험을 담고 있습니다.</p><div class="service-meta"><span>Game</span><span>Interactive</span></div></div><div class="open-link">OPEN SERVICE ↗</div></a>
+        <a class="service" href="https://smilemingi.github.io/Avodoedu1/" target="_blank" rel="noopener"><div><div class="tag">EDUCATION</div><h3>Avodo Math Man</h3><p>수학 개념을 직접 풀어보고 즉시 피드백을 받으며 학습할 수 있도록 만든 교육 소프트웨어입니다.</p><div class="service-meta"><span>Learning</span><span>Math</span></div></div><div class="open-link">OPEN SERVICE ↗</div></a>
+        <a class="service" href="https://sites.google.com/view/avodok/1" target="_blank" rel="noopener"><div><div class="tag">EDUCATION</div><h3>K-Master</h3><p>한국어 학습자를 위한 단계형 학습 플랫폼으로 어휘와 기본 학습 콘텐츠를 제공합니다.</p><div class="service-meta"><span>Korean</span><span>Education</span></div></div><div class="open-link">OPEN SERVICE ↗</div></a>
+        <a class="service" href="https://smilemingi.github.io/avodotour/" target="_blank" rel="noopener"><div><div class="tag">TRAVEL / AI</div><h3>Avodo World Tourism</h3><p>세계 여행지를 탐색하고 국가별 정보를 확인하며 AI 여행 가이드 경험을 제공하는 서비스입니다.</p><div class="service-meta"><span>Travel</span><span>AI</span></div></div><div class="open-link">OPEN SERVICE ↗</div></a>
+        <a class="service" href="https://padlet.com/mingi1017/mingi-company-dcboyjd846hlcea7" target="_blank" rel="noopener"><div><div class="tag">COMMUNITY / HUB</div><h3>Mingi Hub</h3><p>Avodo의 프로젝트와 콘텐츠를 한곳에서 확인하고 관련 자료로 이동할 수 있는 허브입니다.</p><div class="service-meta"><span>Hub</span><span>Community</span></div></div><div class="open-link">OPEN SERVICE ↗</div></a>
+        <a class="service" href="https://linktr.ee/supermingi" target="_blank" rel="noopener"><div><div class="tag">MEDIA / MUSIC</div><h3>Mingi Music & YouTube</h3><p>음악과 영상 콘텐츠, 공식 채널을 연결하는 미디어 허브입니다. 회사 홈페이지와는 별도의 콘텐츠 채널입니다.</p><div class="service-meta"><span>Music</span><span>Media</span></div></div><div class="open-link">OPEN SERVICE ↗</div></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- DETAIL: NEWS -->
+    <section class="detail" id="detail-news">
+    <div class="detail-head"><strong>NEWSROOM</strong><button class="back" data-close-detail>← BACK</button></div>
+    <div class="detail-body">
+      <div class="detail-kicker">NEWSROOM</div>
+      <div class="news-feed-wrap">
+        <div class="news-feed-status">
+          <p id="newsFeedStatus">Google Sheets newsroom is ready. Connect your public sheet to publish updates here.</p>
+          <button class="news-refresh" id="newsRefresh" type="button">REFRESH ↻</button>
+        </div>
+        <div class="news-feed" id="newsFeed"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DETAIL: ESG -->
+    <section class="detail" id="detail-esg">
+    <div class="detail-head"><strong>COMPANY / ESG</strong><button class="back" data-close-detail>← BACK</button></div>
+    <div class="detail-body">
+      <div class="detail-kicker">SUSTAINABILITY</div>
+      <h2 class="detail-title">CREATE<br>RESPONSIBLY.</h2>
+      <p class="detail-lead">Avodo의 ESG는 선언보다 실제 서비스와 운영 방식에서 책임을 실천하는 것을 중요하게 생각합니다.</p>
+      <div class="esg-grid">
+        <div class="esg"><div class="esg-num">01 · ENVIRONMENT</div><h3>환경</h3><p>디지털 중심 기업으로서 불필요한 자원 사용을 줄이고 효율적인 소프트웨어와 지속가능한 디지털 서비스를 지향합니다.</p></div>
+        <div class="esg"><div class="esg-num">02 · SOCIAL</div><h3>사회</h3><p>교육, 접근성, 사용자 경험을 고려해 사람들이 실제로 도움을 받을 수 있는 서비스와 콘텐츠를 만들고 건전한 디지털 문화를 지향합니다.</p></div>
+        <div class="esg"><div class="esg-num">03 · GOVERNANCE</div><h3>거버넌스</h3><p>개인정보 보호, 투명한 운영, 서비스 안전, 책임 있는 AI 활용을 기본 원칙으로 삼아 신뢰할 수 있는 기업 운영을 지향합니다.</p></div>
+      </div>
+      <div class="info-card" style="margin-top:18px"><h3>Responsible AI</h3><p>AI 서비스를 만들 때 정확성뿐 아니라 개인정보, 사용자 안전, 편향과 오용 가능성까지 고려하며 필요한 범위에서 사람이 최종적으로 판단할 수 있는 구조를 지향합니다.</p></div>
+    </div>
+  </section>
+
+  <!-- DETAIL: CAREERS -->
+    <section class="detail" id="detail-careers">
+    <div class="detail-head"><strong>CAREERS</strong><button class="back" data-close-detail>← BACK</button></div>
+    <div class="detail-body">
+      <div class="detail-kicker">JOIN AVODO</div>
+      <h2 class="detail-title">CREATE<br>WITH US.</h2>
+      <p class="detail-lead">Avodo가 실제로 운영·개발하는 사업을 기준으로 지원 분야를 선택할 수 있습니다. 지원 버튼을 누르면 기본 메일 앱에서 지원서를 바로 작성할 수 있습니다.</p>
+      <div class="apply-box">
+        <div class="label" style="color:var(--lime2)">CAREER APPLICATION</div>
+        <h3 style="margin:0;font-size:31px;letter-spacing:-.05em">Choose your department.</h3>
+        <div class="apply-departments">
+          <div class="apply-dept"><strong>AI & SOFTWARE</strong><span>AI · Web · Product · Software Engineering</span></div>
+          <div class="apply-dept"><strong>ENTERTAINMENT</strong><span>Music · Content · Artist / IP · Media</span></div>
+          <div class="apply-dept"><strong>GAMING</strong><span>Game Design · Web Games · Interactive</span></div>
+          <div class="apply-dept"><strong>AUTOMOTIVE</strong><span>Mobility · Digital UX · Future Mobility</span></div>
+          <div class="apply-dept"><strong>EDUCATION</strong><span>Learning · Curriculum · Education Product</span></div>
+          <div class="apply-dept"><strong>TRAVEL & TOURISM</strong><span>Travel Product · AI Guide · Content</span></div>
+          <div class="apply-dept"><strong>DESIGN & CREATIVE</strong><span>Brand · UI/UX · Visual · Creative Direction</span></div>
+          <div class="apply-dept"><strong>BUSINESS & MARKETING</strong><span>Strategy · Partnerships · Marketing · Operations</span></div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label>FIELD</label><select id="careerField"><option>AI & SOFTWARE</option><option>ENTERTAINMENT</option><option>GAMING</option><option>AUTOMOTIVE</option><option>EDUCATION</option><option>TRAVEL & TOURISM</option><option>DESIGN & CREATIVE</option><option>BUSINESS & MARKETING</option></select></div>
+          <div class="field"><label>NAME</label><input id="careerName" placeholder="이름" /></div>
+          <div class="field full"><label>MESSAGE</label><textarea id="careerMessage" placeholder="자기소개, 지원 동기, 관련 경험과 포트폴리오 링크를 적어주세요."></textarea></div>
+        </div>
+        <button class="submit" id="careerSubmit">EMAIL APPLICATION →</button>
+        <p style="margin:14px 0 0;color:rgba(255,255,255,.45);font-size:10px">APPLICATION EMAIL · mingicompany1@gmail.com</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- DETAIL: CONTACT -->
+  <section class="detail" id="detail-contact">
+    <div class="detail-head"><strong>CONTACT US</strong><button class="back" data-close-detail>← BACK</button></div>
+    <div class="detail-body">
+      <div class="detail-kicker">CONTACT AVODO</div>
+      <h2 class="detail-title">LET'S<br>CREATE.</h2>
+      <p class="detail-lead">사업 제휴, 프로젝트, 서비스 문의, 일반적인 연락을 받고 있습니다.</p>
+      <div class="contact-box">
+        <div style="font-size:13px;color:rgba(255,255,255,.6);letter-spacing:.12em">EMAIL</div>
+        <a href="mailto:supermingi10171@gmail.com" style="display:inline-block;margin-top:8px;font-size:clamp(23px,4vw,44px);font-weight:900;letter-spacing:-.05em;color:var(--lime)">supermingi10171@gmail.com</a>
+        <p style="margin:17px 0 0;color:rgba(255,255,255,.64);line-height:1.7">아래 버튼을 누르면 기본 메일 앱에서 문의 메일을 작성할 수 있습니다.</p>
+        <a class="submit" style="display:inline-flex;margin-top:22px" href="mailto:supermingi10171@gmail.com?subject=Avodo%20Contact%20Inquiry">EMAIL AVODO →</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // ---------------- NEWSROOM CONFIG ----------------
+    // Publish a Google Sheet to the web and paste its URL here.
+    // Recommended columns: date | category | title | summary | link
+    // Example: https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit#gid=0
+    const NEWS_SHEET_URL = '';
+
+    const NEWS_COPY={
+      ko:{ready:'Google Sheets 뉴스룸이 준비되어 있습니다. 공개된 시트 주소를 연결하면 이곳에 새 소식이 자동으로 표시됩니다.',emptyTitle:'COMING SOON.',emptyText:'아직 연결된 뉴스 데이터가 없습니다. Google Sheets를 공개한 뒤 NEWS_SHEET_URL에 주소를 넣으면 새로고침할 때 뉴스가 표시됩니다.',loading:'뉴스를 불러오는 중…',error:'뉴스를 불러오지 못했습니다. Google Sheets 공개 설정과 주소를 확인해 주세요.',refresh:'REFRESH ↻',open:'OPEN NEWS ↗'},
+      en:{ready:'The Google Sheets newsroom is ready. Connect a public sheet and new updates will appear here automatically.',emptyTitle:'COMING SOON.',emptyText:'No newsroom data is connected yet. Publish your Google Sheet and add its URL to NEWS_SHEET_URL, then refresh to load updates.',loading:'Loading newsroom updates…',error:'We could not load the newsroom. Please check the Google Sheet URL and its public sharing settings.',refresh:'REFRESH ↻',open:'OPEN NEWS ↗'}
+    };
+
+    const TEXT_I18N={
+      'Avodo는 기술과 창의성을 연결해 아이디어를 실제 제품과 서비스로 발전시키는 크리에이티브 테크 기업입니다. AI와 소프트웨어를 중심으로 엔터테인먼트, 게임, 모빌리티, 교육 등 다양한 영역을 탐색하며 하나의 산업에 갇히지 않는 새로운 경험을 만듭니다.':'Avodo is a creative technology company connecting technology and creativity to turn ideas into real products and services. We explore AI and software alongside entertainment, gaming, mobility and education to create experiences beyond a single industry.',
+      'Avodo는 Mingi Company에서 시작된 여러 프로젝트와 사업 경험을 하나의 브랜드 아래 연결하며 성장한 기업입니다. 기술을 만드는 것뿐 아니라 사람들이 실제로 사용하는 경험까지 설계하는 것을 중요하게 생각합니다.':'Avodo grew by bringing together projects and business experience that began within Mingi Company under one brand. We care not only about building technology, but also about designing experiences people actually use.',
+      'AI 서비스, 웹 소프트웨어, 디지털 콘텐츠, 게임, 교육 플랫폼, 여행·관광 서비스 등 아이디어를 빠르게 프로토타입하고 실제 서비스로 발전시키는 일을 합니다.':'We rapidly prototype ideas across AI services, web software, digital content, games, education platforms and travel services, then develop them into real products.',
+      '작게 시작하고 빠르게 실험하며, 사용자 경험을 기준으로 개선합니다. 서로 다른 분야의 아이디어를 연결해 기존에 없던 조합을 만드는 것을 Avodo의 강점으로 삼습니다.':'We start small, experiment quickly and improve around the user experience. Our strength is connecting ideas from different fields to create combinations that did not exist before.',
+      'Avodo는 아보카도에서 출발한 이름으로, 성장과 생명력의 이미지를 담고 있습니다. 2024년부터 AI를 핵심 성장축으로 삼으며 Avodo Ai Company라는 정체성을 강화했습니다.':'The name Avodo comes from the avocado, carrying ideas of growth and vitality. Since 2024, we have strengthened the Avodo Ai Company identity with AI as a core growth engine.',
+      '기술이 목적이 아니라 새로운 가능성을 만드는 도구가 되도록, Avodo는 창의적인 아이디어와 기술을 연결합니다.':'Avodo connects creative ideas and technology so technology becomes a tool for creating new possibilities.',
+      '아이디어를 실제 제품과 서비스로 발전시키고, 서로 다른 분야를 연결해 사용자에게 의미 있는 새로운 경험을 만듭니다.':'We turn ideas into real products and services, connecting different fields to create meaningful new experiences for users.',
+      'AI와 소프트웨어를 중심으로 콘텐츠, 엔터테인먼트, 게임, 모빌리티, 교육을 연결하는 독창적인 기업 생태계를 구축합니다.':'We are building a distinctive business ecosystem connecting content, entertainment, gaming, mobility and education around AI and software.',
+      '정답을 따라가기보다 새로운 조합을 찾습니다. 작은 아이디어도 직접 만들고 검증하며 발전시킵니다.':'We look for new combinations instead of simply following existing answers. Even small ideas are built, tested and improved through practice.',
+      '사용자와 사회에 미치는 영향을 고려하고 개인정보, 안전, 신뢰성을 중요하게 생각하는 기술과 서비스를 지향합니다.':'We consider the impact on users and society, and build technology and services that prioritize privacy, safety and trust.',
+      'Mingi Company에서 시작한 다양한 프로젝트와 사업을 하나의 비전 아래 연결하며 Avodo라는 새로운 기업 정체성을 만들어왔습니다.':'Avodo has built a new corporate identity by connecting diverse projects and businesses that began within Mingi Company under one vision.',
+      'Warmel 출발':'Warmel Begins','Mingi Company의 자회사 Warmel을 중심으로 기술·서비스 분야의 초기 프로젝트를 시작했습니다.':'We began our early technology and service projects through Warmel, a subsidiary of Mingi Company.',
+      '다양한 사업과 프로젝트 확장':'Expansion of Projects & Businesses','Warmel을 비롯해 Mingi Music, Mingi Car 등 여러 프로젝트가 독립적인 형태로 운영되며 콘텐츠와 기술 분야의 경험을 축적했습니다.':'Warmel, Mingi Music, Mingi Car and other projects operated in independent forms, building experience across content and technology.',
+      'Avodo로 브랜드 통합':'Integration Under Avodo','기존 사업과 프로젝트를 새로운 기업 비전 아래 연결하고, Avodo라는 통합 브랜드로 다시 출발했습니다.':'We connected existing businesses and projects under a new corporate vision and restarted as the unified Avodo brand.',
+      'Avodo Ai Company로 정체성 강화':'Strengthening the Avodo Ai Company Identity','AI를 미래 핵심 기술로 보고 소프트웨어와 디지털 서비스 중심의 사업 방향을 강화했습니다.':'We identified AI as a key technology for the future and strengthened our focus on software and digital services.',
+      '크리에이티브 테크 기업으로 확장':'Expansion as a Creative Technology Company','AI·소프트웨어를 중심으로 엔터테인먼트, 게임, 자동차, 교육, 여행·관광까지 사업 영역을 넓히며 하나의 생태계를 만들어가고 있습니다.':'We are expanding from AI and software into entertainment, gaming, automotive, education and travel to build one connected ecosystem.',
+      'Avodo의 심볼은 아보카도의 형태와 무한대의 흐름을 하나의 간결한 형태로 표현합니다. 하나의 아이디어가 계속 이어지고 성장한다는 브랜드 철학을 시각화했습니다.':'The Avodo mark combines the form of an avocado with the flow of infinity. It visualizes our belief that one idea can continue, grow and expand.',
+      '하나의 로고가 AI 소프트웨어부터 엔터테인먼트, 게임, 모빌리티, 교육까지 서로 다른 사업을 연결하는 공통의 시각 언어가 되도록 설계했습니다.':'The logo is designed as a shared visual language connecting businesses from AI software to entertainment, gaming, mobility and education.',
+      '성장, 생명력, 친근함을 상징하는 브랜드의 출발점.':'The starting point of the brand, symbolizing growth, vitality and approachability.','아이디어와 가능성이 계속 이어지는 확장성을 의미합니다.':'It represents the continuous expansion of ideas and possibilities.','작은 아이디어가 실제 제품으로 자라나는 중심을 나타냅니다.':'It represents the seed from which a small idea grows into a real product.','기술과 자연, 미래와 사람 사이의 균형을 표현하는 Avodo의 핵심 컬러입니다.':'Avodo’s core color, expressing balance between technology and nature, the future and people.',
+      'Avodo는 여러 산업을 무작정 나누기보다 공통된 기술과 창의성을 바탕으로 서로 연결합니다. 각 사업은 독립적으로 성장하면서도 하나의 생태계 안에서 시너지를 만드는 것을 목표로 합니다.':'Avodo connects industries through shared technology and creativity rather than treating them as isolated businesses. Each area is designed to grow independently while creating synergy within one ecosystem.',
+      'AI 기반 웹 서비스, 디지털 제품, 생산성 도구와 소프트웨어 플랫폼을 개발합니다.':'We develop AI-powered web services, digital products, productivity tools and software platforms.','AI 서비스 & 에이전트':'AI Services & Agents','웹·앱 소프트웨어':'Web & App Software','디지털 제품 & OS':'Digital Products & OS',
+      '음악과 영상, 아티스트, 캐릭터와 IP를 중심으로 새로운 콘텐츠 경험을 만듭니다.':'We create new content experiences around music, video, artists, characters and intellectual property.',
+      '브라우저와 디지털 환경에서 누구나 쉽게 즐길 수 있는 게임과 인터랙티브 경험을 개발합니다.':'We develop accessible games and interactive experiences for browsers and digital environments.',
+      '자동차와 모빌리티를 소프트웨어 관점에서 바라보며 새로운 서비스와 사용자 경험을 탐색합니다.':'We explore new services and user experiences by approaching automotive and mobility from a software perspective.',
+      'AI와 인터랙션을 활용해 배우는 과정 자체를 더 쉽고 재미있게 만드는 교육 서비스를 개발합니다.':'We develop education services that make learning easier and more engaging through AI and interaction.',
+      '여행 정보와 탐색, AI 가이드를 연결해 새로운 방식으로 세계를 발견하도록 돕습니다.':'We connect travel information, discovery and AI guidance to help people explore the world in new ways.',
+      '현재 공개되어 있거나 개발된 Avodo의 디지털 서비스와 프로젝트입니다. 각 카드에서 서비스 소개를 확인하고 바로 이동할 수 있습니다.':'Explore Avodo’s published and in-development digital services and projects. Each card includes a short description and a direct link.',
+      'Avodo 캐릭터와 대화하고 상태를 확인하며 가볍게 상호작용할 수 있는 디지털 컴패니언 프로젝트입니다.':'A digital companion project where you can interact with an Avodo character, check its status and have light conversations.',
+      '매일 가볍게 즐길 수 있도록 설계한 운세·엔터테인먼트 인터랙션 서비스입니다.':'A light fortune and entertainment interaction designed for everyday use.',
+      '브라우저에서 바로 즐기는 가벼운 인터랙티브 게임 프로젝트로, Avodo의 게임 실험을 담고 있습니다.':'A lightweight browser game project showcasing Avodo’s experiments in interactive gaming.',
+      '수학 개념을 직접 풀어보고 즉시 피드백을 받으며 학습할 수 있도록 만든 교육 소프트웨어입니다.':'Educational software designed for learning through solving math concepts and receiving immediate feedback.',
+      '한국어 학습자를 위한 단계형 학습 플랫폼으로 어휘와 기본 학습 콘텐츠를 제공합니다.':'A structured learning platform for Korean learners, offering vocabulary and foundational learning content.',
+      '세계 여행지를 탐색하고 국가별 정보를 확인하며 AI 여행 가이드 경험을 제공하는 서비스입니다.':'A travel service for discovering destinations, exploring country information and using an AI travel guide experience.',
+      'Avodo의 프로젝트와 콘텐츠를 한곳에서 확인하고 관련 자료로 이동할 수 있는 허브입니다.':'A central hub for discovering Avodo projects and content and moving to related resources.',
+      '음악과 영상 콘텐츠, 공식 채널을 연결하는 미디어 허브입니다. 회사 홈페이지와는 별도의 콘텐츠 채널입니다.':'A media hub connecting music, video content and official channels. It is separate from the corporate website.',
+      '뉴스룸은 현재 준비 중입니다.':'The newsroom is currently being prepared.','추후 Google Sheets 기반의 업데이트 시스템을 연결해 새로운 소식을 이곳에서 바로 확인할 수 있도록 만들 예정입니다.':'A Google Sheets-powered update system will publish new stories here automatically.',
+      'Avodo의 ESG는 선언보다 실제 서비스와 운영 방식에서 책임을 실천하는 것을 중요하게 생각합니다.':'Avodo believes ESG should be reflected in how our services are built and operated, not only in statements.',
+      '환경':'Environment','디지털 중심 기업으로서 불필요한 자원 사용을 줄이고 효율적인 소프트웨어와 지속가능한 디지털 서비스를 지향합니다.':'As a digital-first company, we aim to reduce unnecessary resource use and build efficient, sustainable digital services.',
+      '사회':'Social','교육, 접근성, 사용자 경험을 고려해 사람들이 실제로 도움을 받을 수 있는 서비스와 콘텐츠를 만들고 건전한 디지털 문화를 지향합니다.':'We consider education, accessibility and user experience to create genuinely helpful services and content while supporting a healthy digital culture.',
+      '거버넌스':'Governance','개인정보 보호, 투명한 운영, 서비스 안전, 책임 있는 AI 활용을 기본 원칙으로 삼아 신뢰할 수 있는 기업 운영을 지향합니다.':'We prioritize privacy, transparent operations, service safety and responsible AI use as foundations of trustworthy governance.',
+      'AI 서비스를 만들 때 정확성뿐 아니라 개인정보, 사용자 안전, 편향과 오용 가능성까지 고려하며 필요한 범위에서 사람이 최종적으로 판단할 수 있는 구조를 지향합니다.':'When building AI services, we consider accuracy, privacy, user safety, bias and misuse, while keeping people involved in final decisions where appropriate.',
+      'Avodo가 실제로 운영·개발하는 사업을 기준으로 지원 분야를 선택할 수 있습니다. 지원 버튼을 누르면 기본 메일 앱에서 지원서를 바로 작성할 수 있습니다.':'Choose a department based on Avodo’s actual business areas. The application button opens your default mail app so you can send your application directly.',
+      '사업 제휴, 프로젝트, 서비스 문의, 일반적인 연락을 받고 있습니다.':'For partnerships, projects, service inquiries and general contact, please reach out to Avodo.','아래 버튼을 누르면 기본 메일 앱에서 문의 메일을 작성할 수 있습니다.':'Use the button below to open your default mail app and compose an inquiry.'
+    };
+
+    function translateStaticText(lang){
+      if(lang!=='en'){
+        // Restore Korean using the reverse map.
+        const rev=Object.fromEntries(Object.entries(TEXT_I18N).map(([ko,en])=>[en,ko]));
+        swapTextNodes(rev);
+        return;
+      }
+      swapTextNodes(TEXT_I18N);
+    }
+    function swapTextNodes(map){
+      const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+      const nodes=[]; let n; while(n=walker.nextNode()) nodes.push(n);
+      nodes.forEach(node=>{const raw=node.nodeValue; const key=raw.trim(); if(!key||!map[key])return; node.nodeValue=raw.replace(key,map[key]);});
+    }
+
+    // Language system: KO / EN. The site keeps the same layout and swaps all primary copy without reloading.
+    const I18N = {
+      ko:{brandTag:'AVODO AI COMPANY',heroOne:'기술과 창의성을 연결해 새로운 가능성을 만들어가는 기업.',heroNote:'Avodo는 인공지능 기반 소프트웨어 서비스, 엔터테인먼트, 게임, 자동차, 교육 소프트웨어 등 다양한 분야에서 새로운 경험을 만듭니다.',ecoLabel:'AVODO ECOSYSTEM',ecoTitle:'우리가 만드는<br>서비스와 브랜드',viewAll:'VIEW ALL →',tourLabel:'NEW · AVODO WORLD TOURISM',tourTitle:'Explore the world.',tourP:'나라별 여행 정보와 탐색 기능, AI 가이드를 연결한 Avodo의 새로운 디지털 서비스입니다.',newsLabel:'NEWSROOM',newsTitle:'Avodo의 새로운 소식',newsAll:'ALL NEWS →',newsMain:'CREATE CREATIVITY.<br>새로운 가능성을 만듭니다.'},
+      en:{brandTag:'AVODO AI COMPANY',heroOne:'A company creating new possibilities by connecting technology and creativity.',heroNote:'Avodo creates new experiences across AI software, entertainment, gaming, automotive, education and other digital fields.',ecoLabel:'AVODO ECOSYSTEM',ecoTitle:'SERVICES &<br>BRANDS WE CREATE',viewAll:'VIEW ALL →',tourLabel:'NEW · AVODO WORLD TOURISM',tourTitle:'Explore the world.',tourP:'A digital service connecting destination discovery, country travel information and an AI travel guide.',newsLabel:'NEWSROOM',newsTitle:'Latest from Avodo',newsAll:'ALL NEWS →',newsMain:'CREATE CREATIVITY.<br>We create new possibilities.'}
+    };
+    const DETAIL_COPY={
+      ko:{
+        company:['COMPANY / INTRODUCTION','AVODO AI COMPANY','CREATE<br>CREATIVITY.','Avodo는 기술과 창의성을 연결해 아이디어를 실제 제품과 서비스로 발전시키는 크리에이티브 테크 기업입니다.'],
+        history:['COMPANY / HISTORY','OUR HISTORY','A NEW START,<br>EVERY TIME.','Mingi Company에서 시작한 다양한 프로젝트와 사업을 하나의 비전 아래 연결하며 Avodo라는 새로운 기업 정체성을 만들어왔습니다.'],
+        branding:['COMPANY / BRAND IDENTITY','THE AVODO MARK','AVOCADO<br>MEETS INFINITY.','Avodo의 심볼은 아보카도의 형태와 무한대의 흐름을 하나의 간결한 형태로 표현합니다. 하나의 아이디어가 계속 이어지고 성장한다는 브랜드 철학을 시각화했습니다.'],
+        mission:['COMPANY / MISSION & VISION','WHY AVODO','CREATE<br>WHAT\'S NEXT.','기술이 목적이 아니라 새로운 가능성을 만드는 도구가 되도록, Avodo는 창의적인 아이디어와 기술을 연결합니다.'],
+        business:['BUSINESS','OUR BUSINESS','FIVE<br>CREATIVE FIELDS.','Avodo는 여러 산업을 공통된 기술과 창의성으로 연결합니다. 각 사업은 독립적으로 성장하면서도 하나의 생태계 안에서 시너지를 만드는 것을 목표로 합니다.'],
+        services:['BRANDS & SERVICES','AVODO ECOSYSTEM','SERVICES<br>WE CREATE.','현재 공개되어 있거나 개발된 Avodo의 디지털 서비스와 프로젝트입니다. 각 카드에서 서비스 소개를 확인하고 바로 이동할 수 있습니다.'],
+        news:['NEWSROOM','NEWSROOM','COMING SOON.','뉴스룸은 현재 준비 중입니다. 추후 Google Sheets 기반의 업데이트 시스템을 연결할 예정입니다.'],
+        esg:['COMPANY / ESG','SUSTAINABILITY','CREATE<br>RESPONSIBLY.','Avodo의 ESG는 선언보다 실제 서비스와 운영 방식에서 책임을 실천하는 것을 중요하게 생각합니다.'],
+        careers:['CAREERS','JOIN AVODO','CREATE<br>WITH US.','Avodo가 실제로 운영·개발하는 사업을 기준으로 지원 분야를 선택할 수 있습니다. 지원 버튼을 누르면 기본 메일 앱에서 지원서를 바로 작성할 수 있습니다.'],
+        contact:['CONTACT US','CONTACT AVODO','LET\'S<br>CREATE.','사업 제휴, 프로젝트, 서비스 문의, 일반적인 연락을 받고 있습니다.']
+      },
+      en:{
+        company:['COMPANY / INTRODUCTION','AVODO AI COMPANY','CREATE<br>CREATIVITY.','Avodo is a creative technology company connecting technology and creativity to turn ideas into real products, services and experiences.'],
+        history:['COMPANY / HISTORY','OUR HISTORY','A NEW START,<br>EVERY TIME.','Avodo has grown by connecting projects and businesses that began within Mingi Company under one evolving vision.'],
+        branding:['COMPANY / BRAND IDENTITY','THE AVODO MARK','AVOCADO<br>MEETS INFINITY.','The Avodo mark combines the form of an avocado with the flow of infinity, expressing an idea that continues, grows and expands.'],
+        mission:['COMPANY / MISSION & VISION','WHY AVODO','CREATE<br>WHAT\'S NEXT.','Avodo connects creative ideas and technology so technology becomes a tool for creating new possibilities.'],
+        business:['BUSINESS','OUR BUSINESS','FIVE<br>CREATIVE FIELDS.','Avodo connects multiple industries through shared technology and creativity, allowing each business to grow while creating ecosystem-wide synergy.'],
+        services:['BRANDS & SERVICES','AVODO ECOSYSTEM','SERVICES<br>WE CREATE.','Explore Avodo digital services and projects. Each card includes a short description and a direct link to the service.'],
+        news:['NEWSROOM','NEWSROOM','COMING SOON.','The newsroom is currently being prepared. A Google Sheets-powered update system will be connected here later.'],
+        esg:['COMPANY / ESG','SUSTAINABILITY','CREATE<br>RESPONSIBLY.','Avodo believes ESG should be reflected in how products are built, operated and improved—not only in statements.'],
+        careers:['CAREERS','JOIN AVODO','CREATE<br>WITH US.','Choose a department based on Avodo\'s actual business areas and open your default mail app to send an application directly.'],
+        contact:['CONTACT US','CONTACT AVODO','LET\'S<br>CREATE.','For partnerships, projects, service inquiries and general contact, please reach out to Avodo.']
+      }
+    };
+    const MENU_COPY={ko:{company:'COMPANY',business:'BUSINESS',services:'BRANDS & SERVICES',news:'NEWSROOM',careers:'CAREERS',connect:'CONNECT'},en:{company:'COMPANY',business:'BUSINESS',services:'BRANDS & SERVICES',news:'NEWSROOM',careers:'CAREERS',connect:'CONNECT'}};
+    function setText(sel,val,html=false){document.querySelectorAll(sel).forEach(el=>html?el.innerHTML=val:el.textContent=val)}
+    function setLang(lang){
+      lang=lang==='en'?'en':'ko';
+      document.body.dataset.currentLang=lang; document.documentElement.lang=lang;
+      document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
+      const d=I18N[lang];
+      setText('.hero .eyebrow',d.brandTag); setText('.hero-one-line',d.heroOne); setText('.hero-note',d.heroNote);
+      const hs=document.querySelector('.home-strip'); if(hs){setText('.home-strip > .strip-head .label',d.ecoLabel);setText('.home-strip > .strip-head .strip-title',d.ecoTitle,true);setText('.home-strip > .strip-head .more',d.viewAll);}
+      setText('.brand-feature .label',d.tourLabel);setText('.brand-feature h3',d.tourTitle);setText('.brand-feature p',d.tourP);
+      setText('.news-preview .label',d.newsLabel);setText('.news-preview .strip-title',d.newsTitle);setText('.news-preview .more',d.newsAll);setText('.news-main h3',d.newsMain,true);
+      const names=MENU_COPY[lang];
+      document.querySelectorAll('.menu-group').forEach(g=>{const tiny=g.querySelector('.tiny');const h=g.querySelector('h2');if(!tiny||!h)return;const key={COMPANY:'company',BUSINESS:'business',SERVICES:'services',NEWSROOM:'news',PEOPLE:'careers',CONTACT:'connect'}[tiny.textContent.trim()];if(key)h.lastChild.textContent=names[key]});
+      // Explicit menu labels keep the language switch deterministic.
+      const labels=lang==='en'?{company:['Introduction','History','Brand Identity','Mission & Vision','ESG'],business:['AI & Software','Entertainment','Gaming','Automotive','Education','Travel & Tourism'],services:['All Services'],news:['Coming Soon'],careers:['Open Positions','Apply by Department']}:{company:['Introduction','History','Brand Identity','Mission & Vision','ESG'],business:['AI & Software','Entertainment','Gaming','Automotive','Education','Travel & Tourism'],services:['All Services'],news:['Coming Soon'],careers:['Open Positions','Apply by Department']};
+      const menuButtons=document.querySelectorAll('.menu-links button[data-detail]');
+      menuButtons.forEach((b,i)=>{const d=b.dataset.detail; if(d==='company'){} });
+      document.querySelectorAll('.menu-group').forEach(g=>{const tiny=g.querySelector('.tiny')?.textContent.trim();const arr=tiny==='COMPANY'?labels.company:tiny==='BUSINESS'?labels.business:tiny==='SERVICES'?labels.services:tiny==='NEWSROOM'?labels.news:tiny==='PEOPLE'?labels.careers:[]; if(arr.length){g.querySelectorAll('.menu-links button').forEach((b,i)=>{if(arr[i])b.textContent=arr[i]})}});
+      translateDetails(lang);
+      translateStaticText(lang);
+      updateNewsroomCopy(lang);
+      localStorage.setItem('avodoLang',lang);
+    }
+    function translateDetails(lang){
+      const set=DETAIL_COPY[lang];
+      Object.entries(set).forEach(([id,v])=>{const el=document.getElementById('detail-'+id);if(!el)return;const head=el.querySelector('.detail-head strong'), kicker=el.querySelector('.detail-kicker'), title=el.querySelector('.detail-title'), lead=el.querySelector('.detail-lead');if(head)head.textContent=v[0];if(kicker)kicker.textContent=v[1];if(title)title.innerHTML=v[2];if(lead)lead.textContent=v[3]});
+      const en=lang==='en';
+      const field=document.getElementById('careerField'),name=document.getElementById('careerName'),msg=document.getElementById('careerMessage');
+      if(field){const opts=en?['AI & SOFTWARE','ENTERTAINMENT','GAMING','AUTOMOTIVE','EDUCATION','TRAVEL & TOURISM','DESIGN & CREATIVE','BUSINESS & MARKETING']:['AI & SOFTWARE','ENTERTAINMENT','GAMING','AUTOMOTIVE','EDUCATION','TRAVEL & TOURISM','DESIGN & CREATIVE','BUSINESS & MARKETING'];field.innerHTML=opts.map(x=>`<option>${x}</option>`).join('')}
+      if(name)name.placeholder=en?'Name':'이름'; if(msg)msg.placeholder=en?'Tell us about yourself, your motivation, relevant experience and portfolio link.':'자기소개, 지원 동기, 관련 경험과 포트폴리오 링크를 적어주세요.';
+    }
+
+    function updateNewsroomCopy(lang){
+      const c=NEWS_COPY[lang];
+      const status=document.getElementById('newsFeedStatus'),refresh=document.getElementById('newsRefresh');
+      if(status) status.textContent=NEWS_SHEET_URL?c.loading:c.ready;
+      if(refresh) refresh.textContent=c.refresh;
+      renderNewsEmpty(lang);
+    }
+    function renderNewsEmpty(lang){
+      const feed=document.getElementById('newsFeed'); if(!feed||feed.dataset.loaded==='1')return;
+      const c=NEWS_COPY[lang];
+      feed.innerHTML=`<div class="news-empty"><h3>${c.emptyTitle}</h3><p>${c.emptyText}</p></div>`;
+    }
+    function parseCSV(text){
+      const rows=[]; let row=[], cell='', quoted=false;
+      for(let i=0;i<text.length;i++){const ch=text[i],next=text[i+1]; if(ch==='"'){if(quoted&&next==='"'){cell+='"';i++;}else quoted=!quoted;}else if(ch===','&&!quoted){row.push(cell);cell='';}else if((ch==='\\n'||ch==='\\r')&&!quoted){if(ch==='\\r'&&next==='\\n')i++;row.push(cell);cell='';if(row.some(v=>v.trim()!==''))rows.push(row);row=[];}else cell+=ch;}
+      if(cell!==''||row.length){row.push(cell);if(row.some(v=>v.trim()!==''))rows.push(row);} return rows;
+    }
+    function sheetCSVUrl(url){
+      if(!url)return '';
+      if(/output=csv|tqx=out:csv/i.test(url))return url;
+      const m=url.match(/spreadsheets\/d\/([a-zA-Z0-9-_]+)/); if(!m)return url;
+      const gid=(url.match(/[?#&]gid=([0-9]+)/)||[])[1]||'0';
+      return `https://docs.google.com/spreadsheets/d/${m[1]}/gviz/tq?tqx=out:csv&gid=${gid}`;
+    }
+    async function loadNewsroom(){
+      const lang=document.body.dataset.currentLang||'ko',c=NEWS_COPY[lang],feed=document.getElementById('newsFeed'),status=document.getElementById('newsFeedStatus');
+      if(!feed)return;
+      if(!NEWS_SHEET_URL){feed.dataset.loaded='0';renderNewsEmpty(lang);return;}
+      if(status)status.textContent=c.loading;
+      try{
+        const res=await fetch(sheetCSVUrl(NEWS_SHEET_URL),{cache:'no-store'}); if(!res.ok)throw new Error('HTTP '+res.status);
+        const rows=parseCSV(await res.text()); if(rows.length<2)throw new Error('No rows');
+        const headers=rows[0].map(x=>x.trim().toLowerCase());
+        const idx=k=>headers.findIndex(h=>h===k||h.includes(k));
+        const dateI=idx('date'),catI=idx('category'),titleI=idx('title'),sumI=idx('summary'),linkI=idx('link');
+        if(titleI<0)throw new Error('Missing title column');
+        const data=rows.slice(1).map(r=>({date:r[dateI]||'',category:r[catI]||'AVODO',title:r[titleI]||'',summary:r[sumI]||'',link:r[linkI]||''})).filter(x=>x.title).slice(0,30);
+        if(!data.length)throw new Error('No news');
+        feed.dataset.loaded='1';
+        feed.innerHTML=data.map(n=>`<article class="news-feed-card"><div><div class="news-feed-date">${escapeHTML(n.date)}</div><div class="news-feed-category">${escapeHTML(n.category)}</div></div><div><h3 class="news-feed-title">${escapeHTML(n.title)}</h3><p class="news-feed-summary">${escapeHTML(n.summary)}</p></div>${n.link?`<a class="news-feed-link" href="${safeURL(n.link)}" target="_blank" rel="noopener">${c.open}</a>`:''}</article>`).join('');
+        if(status)status.textContent=lang==='en'?`Showing ${data.length} newsroom updates from Google Sheets.`:`Google Sheets에서 ${data.length}개의 뉴스 소식을 불러왔습니다.`;
+      }catch(err){console.warn('Avodo Newsroom:',err);feed.dataset.loaded='0';feed.innerHTML=`<div class="news-empty"><h3>${c.error}</h3><p>${c.emptyText}</p></div>`;if(status)status.textContent=c.error;}
+    }
+    function escapeHTML(v){return String(v).replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));}
+    function safeURL(v){try{const u=new URL(v,location.href);return /^https?:$/i.test(u.protocol)?u.href:'#';}catch{return '#';}}
+    document.getElementById('newsRefresh')?.addEventListener('click',loadNewsroom);
+
+    document.querySelectorAll('.lang-btn').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();setLang(b.dataset.lang)}));
+    const savedLang=localStorage.getItem('avodoLang')||'ko';
+    // Logo helper
+    function logoMarkup(mode="light"){
+      const bg = mode === "dark" ? "#173727" : "#fff";
+      return `<svg class="mark" viewBox="0 0 120 84" aria-hidden="true" style="color:${mode==="dark" ? "#fff" : "#173727"}">
+        <path fill="currentColor" d="M16 44C8 28 18 11 37 10c11 0 20 6 28 17 7-11 17-17 29-17 18 0 28 17 21 34-7 16-22 27-38 27-13 0-23-7-31-18C38 64 29 70 19 65c-9-4-13-12-3-21Zm15 5c3 8 8 11 15 11 8 0 16-5 24-14l10-12c5-6 9-9 14-9 6 0 10 4 10 10 0 10-9 20-20 20-8 0-14-4-21-13L53 30C46 21 40 18 34 18c-11 0-17 10-12 20 2 4 5 8 9 11Z"/>
+        <circle cx="34" cy="32" r="6.5" fill="${bg}"/>
+      </svg><span>Avodo</span>`;
+    }
+    document.getElementById("footerBrand").innerHTML = logoMarkup("dark");
+    document.getElementById("overlayLogo").innerHTML = logoMarkup("dark");
+    setLang(savedLang);
+
+    // Header shrink
+    const header = document.getElementById("header");
+    window.addEventListener("scroll",()=>header.classList.toggle("shrink",window.scrollY>45));
+
+    // Mega menu: CSS checkbox is the primary trigger; JS only syncs accessibility/state.
+    const mega = document.getElementById("megaMenu");
+    const menuToggle = document.getElementById("menuToggle");
+    const body = document.body;
+    function syncMenu(){
+      const open = menuToggle.checked;
+      mega.setAttribute("aria-hidden", String(!open));
+      body.classList.toggle("locked", open || document.querySelector(".detail.open") !== null);
+    }
+    menuToggle.addEventListener("change", syncMenu);
+    document.addEventListener("keydown", (e)=>{
+      if((e.key === "Enter" || e.key === " ") && document.activeElement && document.activeElement.matches("label[for='menuToggle']")){
+        e.preventDefault();
+        menuToggle.checked = !menuToggle.checked;
+        syncMenu();
+      }
+    });
+    mega.addEventListener("click", (e)=>{
+      if(e.target === mega){ menuToggle.checked=false; syncMenu(); }
+    });
+
+    // Page routing: internal company items behave like separate pages and update the URL.
+    const details = [...document.querySelectorAll(".detail")];
+    const ROUTES = {company:"company",history:"history",branding:"branding",mission:"mission",business:"business",services:"services",news:"news",esg:"esg",careers:"careers",contact:"contact"};
+    function routeFromHash(){
+      const raw=(location.hash||"#/").replace(/^#\/?/,"").split("?")[0];
+      return ROUTES[raw] || null;
+    }
+    function renderRoute(){
+      const name=routeFromHash();
+      menuToggle.checked=false;
+      mega.classList.remove("open");
+      syncMenu();
+      details.forEach(d=>d.classList.remove("open"));
+      if(name){
+        const target=document.getElementById("detail-"+name);
+        if(target){
+          target.classList.add("open");
+          body.classList.add("locked");
+          target.scrollTop=0;
+          window.scrollTo(0,0);
+          if(name==='news') setTimeout(loadNewsroom,40);
+          return;
+        }
+      }
+      body.classList.remove("locked");
+      window.scrollTo(0,0);
+    }
+    function navigateTo(name){
+      if(!ROUTES[name]) return;
+      const next="#/"+name;
+      if(location.hash===next) renderRoute(); else location.hash=next;
+    }
+    function navigateHome(){
+      if(location.hash && location.hash!=="#/") location.hash="#/"; else renderRoute();
+    }
+    document.querySelectorAll("[data-detail]").forEach(el=>{
+      el.addEventListener("click",e=>{
+        if(el.tagName==='A' && el.getAttribute('href') && el.getAttribute('href').startsWith('http')) return;
+        e.preventDefault();
+        navigateTo(el.dataset.detail);
+      });
+    });
+    document.querySelectorAll("[data-close-detail]").forEach(el=>{
+      el.addEventListener("click",e=>{e.preventDefault();navigateHome();});
+    });
+    window.addEventListener("hashchange",renderRoute);
+
+    // Render the current route on first load.
+    renderRoute();
+
+    // Career application mail
+    document.getElementById("careerSubmit").addEventListener("click",()=>{
+      const field = document.getElementById("careerField").value;
+      const name = document.getElementById("careerName").value.trim() || "지원자";
+      const message = document.getElementById("careerMessage").value.trim() || "자기소개 및 지원 동기를 작성해주세요.";
+      const subject = encodeURIComponent(`[Avodo Career] ${field} 지원 - ${name}`);
+      const bodyText = encodeURIComponent(
+        `지원 분야: ${field}\n이름: ${name}\n\n자기소개 및 지원 동기:\n${message}\n\n포트폴리오/추가 자료 링크:\n`
+      );
+      window.location.href = `mailto:mingicompany1@gmail.com?subject=${subject}&body=${bodyText}`;
+    });
+
+    // ESC closes current layer
+    document.addEventListener("keydown",(e)=>{
+      if(e.key==="Escape"){
+        const openDetailEl = details.find(d=>d.classList.contains("open"));
+        if(openDetailEl) navigateHome();
+        else if(menuToggle.checked){ menuToggle.checked=false; syncMenu(); }
+      }
+    });
+  </script>
+</body>
+</html>
